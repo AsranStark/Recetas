@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 
 // Configure DbContext
 builder.Services.AddDbContext<RecetasDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure Dependencies
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
