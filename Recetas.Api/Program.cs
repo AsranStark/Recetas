@@ -17,6 +17,11 @@ builder.Services.AddDbContext<RecetasDbContext>(options =>
 // Configure Dependencies
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ITagService, TagService>();
+
+// Configure AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
