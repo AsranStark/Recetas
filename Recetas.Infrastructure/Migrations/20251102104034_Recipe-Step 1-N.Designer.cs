@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recetas.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Recetas.Infrastructure.Data;
 namespace Recetas.Infrastructure.Migrations
 {
     [DbContext(typeof(RecetasDbContext))]
-    partial class RecetasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251102104034_Recipe-Step 1-N")]
+    partial class RecipeStep1N
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

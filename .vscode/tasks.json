@@ -18,6 +18,33 @@
             "options": {
                 "cwd": "${workspaceFolder}/Recetas.Api"
             }
+        },
+        {
+            "label": "Add Migration",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "ef",
+                "migrations",
+                "add",
+                "${input:migrationName}",
+                "--project",
+                "${workspaceFolder}/Recetas.Infrastructure/Recetas.Infrastructure.csproj",
+                "--startup-project",
+                "${workspaceFolder}/Recetas.Api/Recetas.Api.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/Recetas.Api"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "migrationName",
+            "type": "promptString",
+            "description": "Name of the migration",
+            "default": "NewMigration"
         }
     ]
 }

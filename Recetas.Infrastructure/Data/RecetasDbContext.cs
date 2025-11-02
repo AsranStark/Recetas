@@ -29,10 +29,17 @@ namespace Recetas.Infrastructure.Data
                 .HasMany(r => r.Ingredients)
                 .WithMany();
 
-            // Configure many-to-many relationship between Recipe and Step
-            modelBuilder.Entity<Recipe>()
-                .HasMany(r => r.Steps)
-                .WithMany();
+            // Configure one-to-many relationship between Recipe and Step
+            modelBuilder.Entity<Step>()
+                .HasOne(s => s.Recipe)
+                .WithMany(r => r.Steps)
+                .HasForeignKey(s => s.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure Step order
+            modelBuilder.Entity<Step>()
+                .Property(s => s.Order)
+                .IsRequired();
         }
     }
 }
