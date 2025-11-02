@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Recetas.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,8 +15,8 @@ namespace Recetas.Infrastructure.Migrations
                 name: "Ingredients",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,8 +27,8 @@ namespace Recetas.Infrastructure.Migrations
                 name: "Recipes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,23 +36,11 @@ namespace Recetas.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Steps",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Steps", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,8 +51,8 @@ namespace Recetas.Infrastructure.Migrations
                 name: "IngredientRecipe",
                 columns: table => new
                 {
-                    IngredientsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    IngredientsId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RecipeId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,25 +72,21 @@ namespace Recetas.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeStep",
+                name: "Steps",
                 columns: table => new
                 {
-                    RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StepsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Order = table.Column<int>(type: "INTEGER", nullable: false),
+                    RecipeId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeStep", x => new { x.RecipeId, x.StepsId });
+                    table.PrimaryKey("PK_Steps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RecipeStep_Recipes_RecipeId",
+                        name: "FK_Steps_Recipes_RecipeId",
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeStep_Steps_StepsId",
-                        column: x => x.StepsId,
-                        principalTable: "Steps",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -111,8 +95,8 @@ namespace Recetas.Infrastructure.Migrations
                 name: "RecipeTag",
                 columns: table => new
                 {
-                    RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TagsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    RecipeId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TagsId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,14 +121,14 @@ namespace Recetas.Infrastructure.Migrations
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeStep_StepsId",
-                table: "RecipeStep",
-                column: "StepsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RecipeTag_TagsId",
                 table: "RecipeTag",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Steps_RecipeId",
+                table: "Steps",
+                column: "RecipeId");
         }
 
         /// <inheritdoc />
@@ -154,22 +138,19 @@ namespace Recetas.Infrastructure.Migrations
                 name: "IngredientRecipe");
 
             migrationBuilder.DropTable(
-                name: "RecipeStep");
-
-            migrationBuilder.DropTable(
                 name: "RecipeTag");
-
-            migrationBuilder.DropTable(
-                name: "Ingredients");
 
             migrationBuilder.DropTable(
                 name: "Steps");
 
             migrationBuilder.DropTable(
-                name: "Recipes");
+                name: "Ingredients");
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "Recipes");
         }
     }
 }

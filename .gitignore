@@ -43,5 +43,9 @@ artifacts/
 *.ldf
 *.ndf
 
+# SQLite files
+*.db-shm
+*.db-wal
+
 # Local History
 .localhistory/
