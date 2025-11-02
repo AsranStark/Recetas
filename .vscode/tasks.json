@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Update Database",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "ef",
+                "database",
+                "update",
+                "--project",
+                "${workspaceFolder}/Recetas.Infrastructure/Recetas.Infrastructure.csproj",
+                "--startup-project",
+                "${workspaceFolder}/Recetas.Api/Recetas.Api.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/Recetas.Api"
+            }
+        }
+    ]
+}

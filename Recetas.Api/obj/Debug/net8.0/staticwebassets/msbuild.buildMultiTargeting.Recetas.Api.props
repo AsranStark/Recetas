@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Recetas.Api.props" />
+</Project>
