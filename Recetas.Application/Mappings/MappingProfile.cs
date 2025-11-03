@@ -9,6 +9,10 @@ namespace Recetas.Application.Mappings
         public MappingProfile()
         {
             CreateMap<Tag, TagDTO>().ReverseMap();
+            
+            CreateMap<Recipe, RecipeDTO>().ReverseMap();
+            CreateMap<CreateRecipeDTO, Recipe>();
+            CreateMap<UpdateRecipeDTO, Recipe>();
         }
     }
 }
