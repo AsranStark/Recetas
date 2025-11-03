@@ -19,6 +19,8 @@ builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IRecipeImageRepository, RecipeImageRepository>();
+builder.Services.AddScoped<IRecipeImageService, RecipeImageService>();
 
 // Configure AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

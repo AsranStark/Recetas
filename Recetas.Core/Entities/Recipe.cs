@@ -13,5 +13,6 @@ namespace Recetas.Core.Entities
         public List<Ingredient> Ingredients { get; set; } = new();
         public ICollection<Step> Steps { get; set; } = new List<Step>();
         public List<Tag> Tags { get; set; } = new();
+        public ICollection<RecipeImage> Images { get; set; } = new List<RecipeImage>();
     }
 }
