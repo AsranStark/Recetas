@@ -1,4 +1,5 @@
 using Recetas.Core.Entities;
+using Recetas.Application.DTOs;
 
 namespace Recetas.Application.Interfaces
 {
@@ -9,6 +10,7 @@ namespace Recetas.Application.Interfaces
         Task<IEnumerable<Recipe>> GetRecipesByTagAsync(Guid tagId);
         Task<Recipe> CreateRecipeAsync(Recipe recipe);
         Task UpdateRecipeAsync(Recipe recipe);
+        Task PartialUpdateRecipeAsync(Guid id, PatchRecipeDTO patchDto);
         Task DeleteRecipeAsync(Guid id);
     }
 }

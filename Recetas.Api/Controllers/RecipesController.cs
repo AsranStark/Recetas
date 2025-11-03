@@ -73,6 +73,16 @@ namespace Recetas.Api.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PartialUpdateRecipe(Guid id, [FromBody] PatchRecipeDTO patchRecipeDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _recipeService.PartialUpdateRecipeAsync(id, patchRecipeDto);
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(Guid id)
         {

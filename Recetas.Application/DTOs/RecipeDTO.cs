@@ -33,4 +33,15 @@ namespace Recetas.Application.DTOs
         public int? PreparationTime { get; set; }
         public bool PreparationInAdvance { get; set; }
     }
+
+    public class PatchRecipeDTO
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? VideoUrl { get; set; }
+        public int? Difficulty { get; set; }
+        public int? Rating { get; set; }
+        public int? PreparationTime { get; set; }
+        public bool? PreparationInAdvance { get; set; }
+    }
 }

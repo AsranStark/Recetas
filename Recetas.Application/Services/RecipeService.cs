@@ -56,6 +56,38 @@ namespace Recetas.Application.Services
             await _recipeRepository.SaveChangesAsync();
         }
 
+        public async Task PartialUpdateRecipeAsync(Guid id, PatchRecipeDTO patchDto)
+        {
+            var recipe = await _recipeRepository.GetByIdAsync(id);
+            if (recipe == null)
+                throw new ArgumentException($"Receta con ID {id} no encontrada.");
+
+            // Actualizar solo los campos que vienen en el patch (no-null)
+            if (!string.IsNullOrWhiteSpace(patchDto.Name))
+                recipe.Name = patchDto.Name;
+            
+            if (patchDto.Description != null)
+                recipe.Description = patchDto.Description;
+            
+            if (patchDto.VideoUrl != null)
+                recipe.VideoUrl = patchDto.VideoUrl;
+            
+            if (patchDto.Difficulty.HasValue)
+                recipe.Difficulty = patchDto.Difficulty;
+            
+            if (patchDto.Rating.HasValue)
+                recipe.Rating = patchDto.Rating;
+            
+            if (patchDto.PreparationTime.HasValue)
+                recipe.PreparationTime = patchDto.PreparationTime;
+            
+            if (patchDto.PreparationInAdvance.HasValue)
+                recipe.PreparationInAdvance = patchDto.PreparationInAdvance.Value;
+
+            await _recipeRepository.UpdateAsync(recipe);
+            await _recipeRepository.SaveChangesAsync();
+        }
+
         public async Task DeleteRecipeAsync(Guid id)
         {
             var recipe = await _recipeRepository.GetByIdAsync(id);
