@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Recetas.Core.Interfaces;
-using Recetas.Core.Entities;
 using Recetas.Application.DTOs;
+using Recetas.Application.Interfaces;
+using Recetas.Core.Entities;
 
 namespace Recetas.Api.Controllers
 {
@@ -9,47 +9,34 @@ namespace Recetas.Api.Controllers
     [Route("api")]
     public class IngredientsController : ControllerBase
     {
-        private readonly IIngredientRepository _ingredientRepository;
-        private readonly IRecipeRepository _recipeRepository;
+        private readonly IIngredientService _ingredientService;
 
-        public IngredientsController(
-            IIngredientRepository ingredientRepository,
-            IRecipeRepository recipeRepository)
+        public IngredientsController(IIngredientService ingredientService)
         {
-            _ingredientRepository = ingredientRepository;
-            _recipeRepository = recipeRepository;
+            _ingredientService = ingredientService;
         }
 
         [HttpGet("ingredients")]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetAllIngredients()
         {
-            var ingredients = await _ingredientRepository.GetAllAsync();
+            var ingredients = await _ingredientService.GetAllIngredientsAsync();
             return Ok(ingredients);
         }
 
         [HttpPost("ingredients")]
-        public async Task<IActionResult> CreateIngredient([FromBody] CreateIngredientRequest request)
+        public async Task<IActionResult> CreateIngredient([FromBody] CreateIngredientDTO request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ingredient = new Ingredient 
-            { 
-                Id = Guid.NewGuid(),
-                Name = request.Name,
-                IconUrl = request.IconUrl ?? string.Empty
-            };
-
-            await _ingredientRepository.AddAsync(ingredient);
-            await _ingredientRepository.SaveChangesAsync();
-
+            var ingredient = await _ingredientService.CreateIngredientAsync(request);
             return CreatedAtAction(nameof(GetIngredientById), new { id = ingredient.Id }, ingredient);
         }
 
         [HttpGet("ingredients/{id}")]
         public async Task<ActionResult<Ingredient>> GetIngredientById(Guid id)
         {
-            var ingredient = await _ingredientRepository.GetIngredientByIdAsync(id);
+            var ingredient = await _ingredientService.GetIngredientByIdAsync(id);
             if (ingredient == null)
                 return NotFound("Ingrediente no encontrado.");
 
@@ -59,63 +46,50 @@ namespace Recetas.Api.Controllers
         [HttpGet("recipes/{recipeId}/ingredients")]
         public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredientsByRecipeId(Guid recipeId)
         {
-            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
-            if (recipe == null)
-                return NotFound("Receta no encontrada.");
-
-            return Ok(recipe.Ingredients);
+            try
+            {
+                var ingredients = await _ingredientService.GetIngredientsByRecipeIdAsync(recipeId);
+                return Ok(ingredients);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost("recipes/{recipeId}/ingredients")]
-        public async Task<IActionResult> AddIngredientToRecipe(Guid recipeId, [FromBody] IngredientDTO request)
+        public async Task<IActionResult> AddIngredientToRecipe(Guid recipeId, [FromBody] AddIngredientToRecipeDTO request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
-            if (recipe == null)
-                return NotFound("Receta no encontrada.");
-
-            var ingredient = await _ingredientRepository.GetIngredientByIdAsync(request.IngredientId);
-            if (ingredient == null)
-                return NotFound("Ingrediente no encontrado.");
-
-            // Verificar que el ingrediente no esté ya en la receta
-            if (recipe.Ingredients.Any(i => i.Id == request.IngredientId))
-                return BadRequest("Este ingrediente ya está asociado a la receta.");
-
-            recipe.Ingredients.Add(ingredient);
-            await _recipeRepository.UpdateAsync(recipe);
-            await _recipeRepository.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetIngredientsByRecipeId), 
-                new { recipeId }, 
-                ingredient);
+            try
+            {
+                await _ingredientService.AddIngredientToRecipeAsync(recipeId, request.IngredientId);
+                var ingredient = await _ingredientService.GetIngredientByIdAsync(request.IngredientId);
+                return CreatedAtAction(nameof(GetIngredientsByRecipeId), 
+                    new { recipeId }, 
+                    ingredient);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("recipes/{recipeId}/ingredients/{ingredientId}")]
         public async Task<IActionResult> RemoveIngredientFromRecipe(Guid recipeId, Guid ingredientId)
         {
-            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
-            if (recipe == null)
-                return NotFound("Receta no encontrada.");
-
-            var ingredient = recipe.Ingredients.FirstOrDefault(i => i.Id == ingredientId);
-            if (ingredient == null)
-                return NotFound("Ingrediente no encontrado en esta receta.");
-
-            recipe.Ingredients.Remove(ingredient);
-            await _recipeRepository.UpdateAsync(recipe);
-            await _recipeRepository.SaveChangesAsync();
-
-            return NoContent();
+            try
+            {
+                await _ingredientService.RemoveIngredientFromRecipeAsync(recipeId, ingredientId);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
-    }
-
-    public class CreateIngredientRequest
-    {
-        public required string Name { get; set; }
-        public string? IconUrl { get; set; }
     }
 }
 

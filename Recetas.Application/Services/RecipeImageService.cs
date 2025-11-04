@@ -61,6 +61,12 @@ namespace Recetas.Application.Services
             await _imageRepository.SaveChangesAsync();
         }
 
+        public async Task UpdateImageAsync(RecipeImage image)
+        {
+            await _imageRepository.UpdateAsync(image);
+            await _imageRepository.SaveChangesAsync();
+        }
+
         public async Task<bool> RecipeExistsAsync(Guid recipeId)
         {
             var recipe = await _recipeRepository.GetByIdAsync(recipeId);

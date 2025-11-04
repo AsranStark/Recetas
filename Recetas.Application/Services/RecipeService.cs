@@ -9,11 +9,16 @@ namespace Recetas.Application.Services
     public class RecipeService : IRecipeService
     {
         private readonly IRecipeRepository _recipeRepository;
+        private readonly ITagService _tagService;
         private readonly IMapper _mapper;
 
-        public RecipeService(IRecipeRepository recipeRepository, IMapper mapper)
+        public RecipeService(
+            IRecipeRepository recipeRepository,
+            ITagService tagService,
+            IMapper mapper)
         {
             _recipeRepository = recipeRepository;
+            _tagService = tagService;
             _mapper = mapper;
         }
 
@@ -96,6 +101,54 @@ namespace Recetas.Application.Services
                 await _recipeRepository.DeleteAsync(recipe);
                 await _recipeRepository.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Tag>> GetRecipeTagsAsync(Guid recipeId)
+        {
+            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
+            if (recipe == null)
+                throw new InvalidOperationException("Receta no encontrada.");
+
+            return recipe.Tags;
+        }
+
+        public async Task AddTagToRecipeAsync(Guid recipeId, string tagName)
+        {
+            if (string.IsNullOrWhiteSpace(tagName))
+                throw new ArgumentException("El nombre del tag no puede estar vacío.");
+
+            // Convertir a PascalCase (primera letra mayúscula)
+            tagName = char.ToUpper(tagName[0]) + tagName.Substring(1).ToLower();
+
+            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
+            if (recipe == null)
+                throw new InvalidOperationException("Receta no encontrada.");
+
+            // Verificar que el tag no esté ya en la receta
+            if (recipe.Tags.Any(t => t.Name.Equals(tagName, StringComparison.OrdinalIgnoreCase)))
+                throw new InvalidOperationException("Esta etiqueta ya está asociada a la receta.");
+
+            // Obtener o crear el tag
+            var tag = await _tagService.GetOrCreateTagByNameAsync(tagName);
+
+            recipe.Tags.Add(tag);
+            await _recipeRepository.UpdateAsync(recipe);
+            await _recipeRepository.SaveChangesAsync();
+        }
+
+        public async Task RemoveTagFromRecipeAsync(Guid recipeId, Guid tagId)
+        {
+            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
+            if (recipe == null)
+                throw new InvalidOperationException("Receta no encontrada.");
+
+            var tag = recipe.Tags.FirstOrDefault(t => t.Id == tagId);
+            if (tag == null)
+                throw new InvalidOperationException("Etiqueta no encontrada en esta receta.");
+
+            recipe.Tags.Remove(tag);
+            await _recipeRepository.UpdateAsync(recipe);
+            await _recipeRepository.SaveChangesAsync();
         }
     }
 }

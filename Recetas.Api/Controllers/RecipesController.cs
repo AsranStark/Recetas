@@ -13,7 +13,9 @@ namespace Recetas.Api.Controllers
         private readonly IRecipeService _recipeService;
         private readonly IMapper _mapper;
 
-        public RecipesController(IRecipeService recipeService, IMapper mapper)
+        public RecipesController(
+            IRecipeService recipeService,
+            IMapper mapper)
         {
             _recipeService = recipeService;
             _mapper = mapper;
@@ -88,6 +90,56 @@ namespace Recetas.Api.Controllers
         {
             await _recipeService.DeleteRecipeAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("{recipeId}/tags")]
+        public async Task<ActionResult<IEnumerable<TagDTO>>> GetRecipeTags(Guid recipeId)
+        {
+            try
+            {
+                var tags = await _recipeService.GetRecipeTagsAsync(recipeId);
+                var tagDtos = _mapper.Map<IEnumerable<TagDTO>>(tags);
+                return Ok(tagDtos);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("{recipeId}/tags")]
+        public async Task<IActionResult> AddTagToRecipe(Guid recipeId, [FromBody] AddTagToRecipeDTO request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                await _recipeService.AddTagToRecipeAsync(recipeId, request.Name);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{recipeId}/tags/{tagId}")]
+        public async Task<IActionResult> RemoveTagFromRecipe(Guid recipeId, Guid tagId)
+        {
+            try
+            {
+                await _recipeService.RemoveTagFromRecipeAsync(recipeId, tagId);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

@@ -12,5 +12,8 @@ namespace Recetas.Application.Interfaces
         Task UpdateRecipeAsync(Recipe recipe);
         Task PartialUpdateRecipeAsync(Guid id, PatchRecipeDTO patchDto);
         Task DeleteRecipeAsync(Guid id);
+        Task<IEnumerable<Tag>> GetRecipeTagsAsync(Guid recipeId);
+        Task AddTagToRecipeAsync(Guid recipeId, string tagName);
+        Task RemoveTagFromRecipeAsync(Guid recipeId, Guid tagId);
     }
 }

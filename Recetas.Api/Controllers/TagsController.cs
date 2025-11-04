@@ -25,8 +25,28 @@ namespace Recetas.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<TagDTO>> CreateTag([FromBody] TagDTO tagDto)
         {
+            if (string.IsNullOrWhiteSpace(tagDto.Name))
+                return BadRequest("El nombre del tag es requerido.");
+
+            // Normalizar nombre a PascalCase
+            tagDto.Name = char.ToUpper(tagDto.Name[0]) + tagDto.Name.Substring(1).ToLower();
+
             var createdTag = await _tagService.CreateTagAsync(tagDto);
-            return CreatedAtAction(nameof(GetTags), null, createdTag); // Removemos el id de la ruta ya que GetTags no lo usa
+            return CreatedAtAction(nameof(GetTags), null, createdTag);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTag(Guid id)
+        {
+            try
+            {
+                await _tagService.DeleteTagAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

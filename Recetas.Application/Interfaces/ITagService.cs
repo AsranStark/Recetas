@@ -1,4 +1,5 @@
 using Recetas.Application.DTOs;
+using Recetas.Core.Entities;
 
 namespace Recetas.Application.Interfaces
 {
@@ -6,5 +7,7 @@ namespace Recetas.Application.Interfaces
     {
         Task<IEnumerable<TagDTO>> GetAllTagsAsync();
         Task<TagDTO> CreateTagAsync(TagDTO tagDto);
+        Task<Tag> GetOrCreateTagByNameAsync(string name);
+        Task DeleteTagAsync(Guid id);
     }
 }

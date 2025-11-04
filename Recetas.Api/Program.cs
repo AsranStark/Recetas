@@ -19,7 +19,9 @@ builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IStepService, StepService>();
 builder.Services.AddScoped<IRecipeImageRepository, RecipeImageRepository>();
 builder.Services.AddScoped<IRecipeImageService, RecipeImageService>();
 
