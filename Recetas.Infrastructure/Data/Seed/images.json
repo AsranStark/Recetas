@@ -1,0 +1,8 @@
+[
+  {
+    "Id": "00000001-0000-0000-0000-000000000000",
+    "ImageUrl": "https://cdn.example.com/images/tortilla-1.jpg",
+    "Order": 1,
+    "RecipeId": "00000001-0000-0000-0000-000000000000"
+  }
+]

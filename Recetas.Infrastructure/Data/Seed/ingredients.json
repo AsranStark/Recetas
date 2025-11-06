@@ -1,0 +1,17 @@
+[
+  {
+    "Id": "00000001-0000-0000-0000-000000000000",
+    "Name": "Huevo",
+    "IconUrl": "https://cdn.example.com/icons/egg.png"
+  },
+  {
+    "Id": "00000002-0000-0000-0000-000000000000",
+    "Name": "Patata",
+    "IconUrl": "https://cdn.example.com/icons/potato.png"
+  },
+  {
+    "Id": "00000003-0000-0000-0000-000000000000",
+    "Name": "Aceite de oliva",
+    "IconUrl": "https://cdn.example.com/icons/olive-oil.png"
+  }
+]

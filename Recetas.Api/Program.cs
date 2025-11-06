@@ -4,6 +4,7 @@ using Recetas.Application.Services;
 using Recetas.Core.Interfaces;
 using Recetas.Infrastructure.Data;
 using Recetas.Infrastructure.Repositories;
+using Recetas.Infrastructure.Data.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    // Seed de datos local desde JSON (solo en Development)
+    await using var scope = app.Services.CreateAsyncScope();
+    var db = scope.ServiceProvider.GetRequiredService<RecetasDbContext>();
+    var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
+    var logger = loggerFactory.CreateLogger("Seeder");
+    await JsonSeeder.SeedAsync(db, app.Environment.ContentRootPath, logger);
 }
 
 app.UseHttpsRedirection();
