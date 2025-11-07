@@ -15,6 +15,7 @@ namespace Recetas.Infrastructure.Data
         public DbSet<Step> Steps { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<RecipeImage> RecipeImages { get; set; }
+        public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +42,16 @@ namespace Recetas.Infrastructure.Data
             modelBuilder.Entity<Step>()
                 .Property(s => s.Order)
                 .IsRequired();
+
+            // MeasurementUnit constraints
+            modelBuilder.Entity<MeasurementUnit>()
+                .HasKey(mu => mu.Code);
+            modelBuilder.Entity<MeasurementUnit>()
+                .Property(mu => mu.Name)
+                .IsRequired();
+            modelBuilder.Entity<MeasurementUnit>()
+                .HasIndex(mu => mu.Name)
+                .IsUnique();
         }
     }
 }

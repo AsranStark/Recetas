@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recetas.Infrastructure.Data;
 
@@ -10,9 +11,11 @@ using Recetas.Infrastructure.Data;
 namespace Recetas.Infrastructure.Migrations
 {
     [DbContext(typeof(RecetasDbContext))]
-    partial class RecetasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251107201127_Add MeasurementUnits")]
+    partial class AddMeasurementUnits
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");

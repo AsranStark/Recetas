@@ -19,8 +19,9 @@ public static class JsonSeeder
             return;
         }
 
-        // Orden recomendado: bases primero
-        await SeedIfEmpty<Ingredient>(db, Path.Combine(seedDir, "ingredients.json"), logger);
+    // Orden recomendado: catálogos base primero
+    await SeedIfEmpty<MeasurementUnit>(db, Path.Combine(seedDir, "units.json"), logger);
+    await SeedIfEmpty<Ingredient>(db, Path.Combine(seedDir, "ingredients.json"), logger);
         await SeedIfEmpty<Tag>(db, Path.Combine(seedDir, "tags.json"), logger);
         await SeedIfEmpty<Recipe>(db, Path.Combine(seedDir, "recipes.json"), logger);
         // Entidades dependientes
