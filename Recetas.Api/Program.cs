@@ -46,6 +46,8 @@ if (app.Environment.IsDevelopment())
     var db = scope.ServiceProvider.GetRequiredService<RecetasDbContext>();
     var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
     var logger = loggerFactory.CreateLogger("Seeder");
+    // Asegura que la BD se crea y está en la última migración (sin EnsureCreated)
+    await db.Database.MigrateAsync();
     await JsonSeeder.SeedAsync(db, app.Environment.ContentRootPath, logger);
 }
 

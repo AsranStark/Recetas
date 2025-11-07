@@ -10,6 +10,7 @@ namespace Recetas.Application.DTOs
         public int? Rating { get; set; }
         public int? PreparationTime { get; set; }
         public bool PreparationInAdvance { get; set; }
+        public List<RecipeIngredientDTO> Ingredients { get; set; } = new();
         public List<TagDTO> Tags { get; set; } = new();
     }
 

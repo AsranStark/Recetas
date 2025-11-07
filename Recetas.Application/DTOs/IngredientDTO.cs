@@ -29,4 +29,11 @@ namespace Recetas.Application.DTOs
     {
         public required Guid IngredientId { get; set; }
     }
+
+    // Moved here per request (previously standalone file UpdateRecipeIngredientDTO.cs)
+    public class UpdateRecipeIngredientDTO
+    {
+        public decimal Quantity { get; set; }
+        public int UnitCode { get; set; }
+    }
 }

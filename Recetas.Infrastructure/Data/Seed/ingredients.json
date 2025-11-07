@@ -2,16 +2,51 @@
   {
     "Id": "00000001-0000-0000-0000-000000000000",
     "Name": "Huevo",
-    "IconUrl": "https://cdn.example.com/icons/egg.png"
+    "IconUrl": ""
   },
   {
     "Id": "00000002-0000-0000-0000-000000000000",
-    "Name": "Patata",
-    "IconUrl": "https://cdn.example.com/icons/potato.png"
+    "Name": "Berenjena",
+    "IconUrl": ""
   },
   {
     "Id": "00000003-0000-0000-0000-000000000000",
     "Name": "Aceite de oliva",
-    "IconUrl": "https://cdn.example.com/icons/olive-oil.png"
+    "IconUrl": ""
+  },
+  {
+    "Id": "00000004-0000-0000-0000-000000000000",
+    "Name": "Ajo",
+    "IconUrl": ""
+  },
+  {
+    "Id": "00000005-0000-0000-0000-000000000000",
+    "Name": "Limón",
+    "IconUrl": ""
+  },
+  {
+    "Id": "00000006-0000-0000-0000-000000000000",
+    "Name": "Sal",
+    "IconUrl": ""
+  },
+  {
+    "Id": "00000007-0000-0000-0000-000000000000",
+    "Name": "Comino",
+    "IconUrl": ""
+  },
+  {
+    "Id": "00000008-0000-0000-0000-000000000000",
+    "Name": "Perejil",
+    "IconUrl": ""
+  },
+  {
+    "Id": "00000009-0000-0000-0000-000000000000",
+    "Name": "Tahini",
+    "IconUrl": ""
+  },
+  {
+    "Id": "00000010-0000-0000-0000-000000000000",
+    "Name": "Chile seco",
+    "IconUrl": ""
   }
 ]

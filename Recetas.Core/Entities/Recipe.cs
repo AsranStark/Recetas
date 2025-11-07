@@ -10,7 +10,7 @@ namespace Recetas.Core.Entities
         public int? Rating { get; set; }
         public int? PreparationTime { get; set; } // in minutes
         public bool PreparationInAdvance { get; set; } = false;
-        public List<Ingredient> Ingredients { get; set; } = new();
+        public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<Step> Steps { get; set; } = new List<Step>();
         public List<Tag> Tags { get; set; } = new();
         public ICollection<RecipeImage> Images { get; set; } = new List<RecipeImage>();

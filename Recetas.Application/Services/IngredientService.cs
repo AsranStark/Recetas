@@ -7,15 +7,18 @@ namespace Recetas.Application.Services
 {
     public class IngredientService : IIngredientService
     {
-        private readonly IIngredientRepository _ingredientRepository;
-        private readonly IRecipeRepository _recipeRepository;
+    private readonly IIngredientRepository _ingredientRepository;
+    private readonly IRecipeRepository _recipeRepository;
+    private readonly AutoMapper.IMapper _mapper;
 
         public IngredientService(
             IIngredientRepository ingredientRepository,
-            IRecipeRepository recipeRepository)
+            IRecipeRepository recipeRepository,
+            AutoMapper.IMapper mapper)
         {
             _ingredientRepository = ingredientRepository;
             _recipeRepository = recipeRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Ingredient>> GetAllIngredientsAsync()
@@ -43,13 +46,28 @@ namespace Recetas.Application.Services
             return await _ingredientRepository.GetIngredientByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Ingredient>> GetIngredientsByRecipeIdAsync(Guid recipeId)
+        public async Task<IEnumerable<RecipeIngredientDTO>> GetIngredientsByRecipeIdAsync(Guid recipeId)
         {
             var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
             if (recipe == null)
                 throw new InvalidOperationException("Receta no encontrada.");
 
-            return recipe.Ingredients;
+            // Mapear a DTOs detallados con cantidad y unidad
+            var detailed = _mapper.Map<IEnumerable<RecipeIngredientDTO>>(recipe.RecipeIngredients);
+            return detailed;
+        }
+
+        public async Task<IEnumerable<IngredientDTO>> GetBaseIngredientsByRecipeIdAsync(Guid recipeId)
+        {
+            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
+            if (recipe == null)
+                throw new InvalidOperationException("Receta no encontrada.");
+
+            var ingredients = recipe.RecipeIngredients
+                .Select(ri => ri.Ingredient!)
+                .Where(i => i != null)!;
+
+            return _mapper.Map<IEnumerable<IngredientDTO>>(ingredients);
         }
 
         public async Task AddIngredientToRecipeAsync(Guid recipeId, Guid ingredientId)
@@ -62,11 +80,17 @@ namespace Recetas.Application.Services
             if (ingredient == null)
                 throw new InvalidOperationException("Ingrediente no encontrado.");
 
-            // Verificar que el ingrediente no esté ya en la receta
-            if (recipe.Ingredients.Any(i => i.Id == ingredientId))
+            if (recipe.RecipeIngredients.Any(ri => ri.IngredientId == ingredientId))
                 throw new InvalidOperationException("Este ingrediente ya está asociado a la receta.");
 
-            recipe.Ingredients.Add(ingredient);
+            recipe.RecipeIngredients.Add(new RecipeIngredient
+            {
+                RecipeId = recipeId,
+                IngredientId = ingredientId,
+                Quantity = 0m,
+                MeasurementUnitCode = 1 // Unidades por defecto
+            });
+
             await _recipeRepository.UpdateAsync(recipe);
             await _recipeRepository.SaveChangesAsync();
         }
@@ -77,11 +101,28 @@ namespace Recetas.Application.Services
             if (recipe == null)
                 throw new InvalidOperationException("Receta no encontrada.");
 
-            var ingredient = recipe.Ingredients.FirstOrDefault(i => i.Id == ingredientId);
-            if (ingredient == null)
+            var link = recipe.RecipeIngredients.FirstOrDefault(ri => ri.IngredientId == ingredientId);
+            if (link == null)
                 throw new InvalidOperationException("Ingrediente no encontrado en esta receta.");
 
-            recipe.Ingredients.Remove(ingredient);
+            recipe.RecipeIngredients.Remove(link);
+            await _recipeRepository.UpdateAsync(recipe);
+            await _recipeRepository.SaveChangesAsync();
+        }
+
+        public async Task UpdateRecipeIngredientAsync(Guid recipeId, Guid ingredientId, UpdateRecipeIngredientDTO updateDto)
+        {
+            var recipe = await _recipeRepository.GetRecipeWithDetailsAsync(recipeId);
+            if (recipe == null)
+                throw new InvalidOperationException("Receta no encontrada.");
+
+            var link = recipe.RecipeIngredients.FirstOrDefault(ri => ri.IngredientId == ingredientId);
+            if (link == null)
+                throw new InvalidOperationException("Ingrediente no encontrado en esta receta.");
+
+            link.Quantity = updateDto.Quantity;
+            link.MeasurementUnitCode = updateDto.UnitCode;
+
             await _recipeRepository.UpdateAsync(recipe);
             await _recipeRepository.SaveChangesAsync();
         }

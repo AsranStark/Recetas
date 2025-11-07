@@ -1,14 +1,22 @@
 [
   {
-    "RecipeName": "Tortilla de patatas",
-    "IngredientNames": [
-      "Huevo",
-      "Patata",
-      "Aceite de oliva"
+    "RecipeName": "Baba Ganoush",
+    "Ingredients": [
+      { "Name": "Berenjena", "Quantity": 2, "UnitCode": 1 },
+      { "Name": "Aceite de oliva", "Quantity": 70, "UnitCode": 3 },
+      { "Name": "Ajo", "Quantity": 3, "UnitCode": 1 },
+      { "Name": "Limón", "Quantity": 1, "UnitCode": 1 },
+      { "Name": "Sal", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Comino", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Perejil", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Tahini", "Quantity": 2, "UnitCode": 4 },
+      { "Name": "Chile seco", "Quantity": 0, "UnitCode": 0 }
     ],
     "TagNames": [
-      "Clásico",
-      "Rápido"
+      "Dipeo",
+      "Libanesa",
+      "Vegetariana",
+      "Vegana"
     ]
   }
 ]

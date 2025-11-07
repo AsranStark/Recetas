@@ -16,6 +16,7 @@ namespace Recetas.Infrastructure.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<RecipeImage> RecipeImages { get; set; }
         public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,10 +27,24 @@ namespace Recetas.Infrastructure.Data
                 .HasMany(r => r.Tags)
                 .WithMany();
 
-            // Configure many-to-many relationship between Recipe and Ingredient
-            modelBuilder.Entity<Recipe>()
-                .HasMany(r => r.Ingredients)
-                .WithMany();
+            // Replace many-to-many Recipe-Ingredient with explicit join entity RecipeIngredient
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasKey(ri => new { ri.RecipeId, ri.IngredientId });
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Recipe)
+                .WithMany(r => r.RecipeIngredients)
+                .HasForeignKey(ri => ri.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Ingredient)
+                .WithMany()
+                .HasForeignKey(ri => ri.IngredientId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.MeasurementUnit)
+                .WithMany()
+                .HasForeignKey(ri => ri.MeasurementUnitCode)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure one-to-many relationship between Recipe and Step
             modelBuilder.Entity<Step>()
@@ -46,6 +61,9 @@ namespace Recetas.Infrastructure.Data
             // MeasurementUnit constraints
             modelBuilder.Entity<MeasurementUnit>()
                 .HasKey(mu => mu.Code);
+            modelBuilder.Entity<MeasurementUnit>()
+                .Property(mu => mu.Code)
+                .ValueGeneratedNever();
             modelBuilder.Entity<MeasurementUnit>()
                 .Property(mu => mu.Name)
                 .IsRequired();

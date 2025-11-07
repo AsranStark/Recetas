@@ -1,16 +1,12 @@
 [
   {
     "Id": "00000001-0000-0000-0000-000000000000",
-    "Name": "Tortilla de patatas",
-    "Description": "Clásica tortilla española",
-    "VideoUrl": null,
+    "Name": "Baba Ganoush",
+    "Description": "Dipeo a base de berenjena asada y tahini.",
+    "VideoUrl": "https://youtu.be/biLjY9RmC04?si=qu4E_oK98WfVIgYM&t=27",
     "Difficulty": 2,
     "Rating": 5,
-    "PreparationTime": 25,
-    "PreparationInAdvance": false,
-    "Ingredients": [],
-    "Steps": [],
-    "Tags": [],
-    "Images": []
+    "PreparationTime": 120,
+    "PreparationInAdvance": false
   }
 ]

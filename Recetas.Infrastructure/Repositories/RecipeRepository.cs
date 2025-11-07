@@ -15,7 +15,8 @@ namespace Recetas.Infrastructure.Repositories
         {
             return await _context.Recipes
                 .Include(r => r.Tags)
-                .Include(r => r.Ingredients)
+                .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.MeasurementUnit)
                 .Include(r => r.Steps)
                 .ToListAsync();
         }
@@ -24,7 +25,8 @@ namespace Recetas.Infrastructure.Repositories
         {
             return await _context.Recipes
                 .Include(r => r.Tags)
-                .Include(r => r.Ingredients)
+                .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.MeasurementUnit)
                 .Include(r => r.Steps)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
@@ -33,7 +35,8 @@ namespace Recetas.Infrastructure.Repositories
         {
             return await _context.Recipes
                 .Include(r => r.Tags)
-                .Include(r => r.Ingredients)
+                .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.MeasurementUnit)
                 .Include(r => r.Steps)
                 .Where(r => r.Tags.Any(t => t.Id == tagId))
                 .ToListAsync();

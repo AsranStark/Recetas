@@ -9,8 +9,7 @@ public static class JsonSeeder
 {
     public static async Task SeedAsync(RecetasDbContext db, string contentRootPath, ILogger logger)
     {
-        // Para entorno local: asegura la BD si no existe (sin depender de migraciones)
-        await db.Database.EnsureCreatedAsync();
+        // La creación/migración de la BD se realiza en el arranque (Program.cs)
 
         var seedDir = Path.GetFullPath(Path.Combine(contentRootPath, "..", "Recetas.Infrastructure", "Data", "Seed"));
         if (!Directory.Exists(seedDir))
@@ -28,9 +27,15 @@ public static class JsonSeeder
         await SeedIfEmpty<Step>(db, Path.Combine(seedDir, "steps.json"), logger);
         await SeedIfEmpty<RecipeImage>(db, Path.Combine(seedDir, "images.json"), logger);
 
+    // Guardar antes de vincular para que las consultas por nombre encuentren datos
+    await db.SaveChangesAsync();
+    // Evitar conflictos de tracking entre entidades seed y entidades que se cargarán para vincular
+    db.ChangeTracker.Clear();
+
         // Vincular relaciones N-N desde archivo de enlaces
         await LinkRecipeRelationsAsync(db, Path.Combine(seedDir, "recipe-links.json"), logger);
 
+        // Guardar vínculos
         await db.SaveChangesAsync();
     }
 
@@ -69,10 +74,17 @@ public static class JsonSeeder
         public List<Guid> TagIds { get; set; } = new();
     }
 
+    private class IngredientLinkDto
+    {
+        public string Name { get; set; } = string.Empty; // ingredient name
+        public decimal Quantity { get; set; } // amount
+        public int UnitCode { get; set; } // MeasurementUnit.Code
+    }
+
     private class RecipeLinksByNameDto
     {
         public string RecipeName { get; set; } = string.Empty;
-        public List<string> IngredientNames { get; set; } = new();
+        public List<IngredientLinkDto> Ingredients { get; set; } = new();
         public List<string> TagNames { get; set; } = new();
     }
 
@@ -97,12 +109,12 @@ public static class JsonSeeder
             string Norm(string s) => s.Trim().ToLowerInvariant();
 
             // Cargar catálogos a memoria para emparejar por nombre de forma robusta
-            var allIngredients = await db.Ingredients.AsNoTracking().ToListAsync();
+            var allIngredients = await db.Ingredients.ToListAsync();
             var ingByName = allIngredients
                 .GroupBy(i => Norm(i.Name))
                 .ToDictionary(g => g.Key, g => g.First());
 
-            var allTags = await db.Tags.AsNoTracking().ToListAsync();
+            var allTags = await db.Tags.ToListAsync();
             var tagByName = allTags
                 .GroupBy(t => Norm(t.Name))
                 .ToDictionary(g => g.Key, g => g.First());
@@ -110,9 +122,9 @@ public static class JsonSeeder
             foreach (var link in byName)
             {
                 var recipe = await db.Recipes
-                    .Include(r => r.Ingredients)
+                    .Include(r => r.RecipeIngredients)
                     .Include(r => r.Tags)
-                    .FirstOrDefaultAsync(r => r.Name == link.RecipeName);
+                    .FirstOrDefaultAsync(r => r.Name.ToLower() == link.RecipeName.ToLower());
 
                 if (recipe is null)
                 {
@@ -120,18 +132,26 @@ public static class JsonSeeder
                     continue;
                 }
 
-                if (link.IngredientNames.Count > 0)
+                if (link.Ingredients.Count > 0)
                 {
-                    var wanted = link.IngredientNames.Select(Norm).ToHashSet();
-                    var resolved = wanted
-                        .Select(n => ingByName.TryGetValue(n, out var i) ? i : null)
-                        .Where(i => i != null)
-                        .Select(i => i!)
+                    var wanted = link.Ingredients.Select(il => Norm(il.Name)).ToHashSet();
+                    var resolved = link.Ingredients
+                        .Select(il => (dto: il, entity: ingByName.TryGetValue(Norm(il.Name), out var ing) ? ing : null))
+                        .Where(x => x.entity != null)
+                        .Select(x => (x.dto, x.entity!))
                         .ToList();
-                    foreach (var ing in resolved)
+                    foreach (var (dto, ing) in resolved)
                     {
-                        if (!recipe.Ingredients.Any(x => x.Id == ing.Id))
-                            recipe.Ingredients.Add(ing);
+                        if (!recipe.RecipeIngredients.Any(ri => ri.IngredientId == ing.Id))
+                        {
+                            db.RecipeIngredients.Add(new RecipeIngredient
+                            {
+                                RecipeId = recipe.Id,
+                                IngredientId = ing.Id,
+                                Quantity = dto.Quantity,
+                                MeasurementUnitCode = dto.UnitCode
+                            });
+                        }
                     }
                     var missing = wanted.Where(n => !ingByName.ContainsKey(n)).ToList();
                     if (missing.Count > 0)
@@ -168,7 +188,7 @@ public static class JsonSeeder
         foreach (var link in byIds)
         {
             var recipe = await db.Recipes
-                .Include(r => r.Ingredients)
+                .Include(r => r.RecipeIngredients)
                 .Include(r => r.Tags)
                 .FirstOrDefaultAsync(r => r.Id == link.RecipeId);
 
@@ -185,8 +205,16 @@ public static class JsonSeeder
                     .ToListAsync();
                 foreach (var ing in ings)
                 {
-                    if (!recipe.Ingredients.Any(x => x.Id == ing.Id))
-                        recipe.Ingredients.Add(ing);
+                    if (!recipe.RecipeIngredients.Any(x => x.IngredientId == ing.Id))
+                    {
+                        db.RecipeIngredients.Add(new RecipeIngredient
+                        {
+                            RecipeId = recipe.Id,
+                            IngredientId = ing.Id,
+                            Quantity = 0m,
+                            MeasurementUnitCode = 1 // default unidades si formato antiguo
+                        });
+                    }
                 }
             }
 
