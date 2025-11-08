@@ -18,6 +18,7 @@ namespace Recetas.Infrastructure.Repositories
                 .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.Ingredient)
                 .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.MeasurementUnit)
                 .Include(r => r.Steps)
+                .Include(r => r.Images)
                 .ToListAsync();
         }
 
@@ -28,6 +29,7 @@ namespace Recetas.Infrastructure.Repositories
                 .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.Ingredient)
                 .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.MeasurementUnit)
                 .Include(r => r.Steps)
+                .Include(r => r.Images)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
@@ -38,6 +40,7 @@ namespace Recetas.Infrastructure.Repositories
                 .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.Ingredient)
                 .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.MeasurementUnit)
                 .Include(r => r.Steps)
+                .Include(r => r.Images)
                 .Where(r => r.Tags.Any(t => t.Id == tagId))
                 .ToListAsync();
         }

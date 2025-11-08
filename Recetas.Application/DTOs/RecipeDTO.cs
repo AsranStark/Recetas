@@ -12,6 +12,16 @@ namespace Recetas.Application.DTOs
         public bool PreparationInAdvance { get; set; }
         public List<RecipeIngredientDTO> Ingredients { get; set; } = new();
         public List<TagDTO> Tags { get; set; } = new();
+        public List<RecipeImageDTO> Images { get; set; } = new();
+    }
+
+    public class RecipeListDTO
+    {
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
+        public int? Rating { get; set; }
+        public List<TagDTO> Tags { get; set; } = new();
+        public RecipeImageDTO? Image { get; set; }
     }
 
     public class CreateRecipeDTO

@@ -10,6 +10,7 @@ namespace Recetas.Application.Mappings
         {
             CreateMap<Tag, TagDTO>().ReverseMap();
             CreateMap<Ingredient, IngredientDTO>().ReverseMap();
+            CreateMap<RecipeImageDTO, RecipeImage>().ReverseMap();
 
             CreateMap<RecipeIngredient, RecipeIngredientDTO>()
                 .ForMember(d => d.IngredientId, o => o.MapFrom(s => s.IngredientId))
@@ -20,9 +21,13 @@ namespace Recetas.Application.Mappings
 
             CreateMap<Recipe, RecipeDTO>()
                 .ForMember(d => d.Ingredients, o => o.MapFrom(s => s.RecipeIngredients))
+                .ForMember(d => d.Images, o => o.MapFrom(s => s.Images))
                 .ReverseMap();
             CreateMap<CreateRecipeDTO, Recipe>();
             CreateMap<UpdateRecipeDTO, Recipe>();
+
+            CreateMap<Recipe, RecipeListDTO>()
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.Images.OrderBy(i => i.Order).FirstOrDefault()));
         }
     }
 }

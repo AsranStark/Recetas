@@ -5,7 +5,6 @@ namespace Recetas.Application.DTOs
         public Guid Id { get; set; }
         public required string ImageUrl { get; set; }
         public int Order { get; set; }
-        public Guid RecipeId { get; set; }
     }
 
     public class CreateRecipeImageDTO

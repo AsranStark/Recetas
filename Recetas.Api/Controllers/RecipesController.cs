@@ -22,9 +22,16 @@ namespace Recetas.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeDTO>>> GetRecipes()
+        public async Task<IActionResult> GetRecipes([FromQuery] string? view = null)
         {
             var recipes = await _recipeService.GetAllRecipesAsync();
+            
+            if (view?.ToLower() == "list")
+            {
+                var listDtos = _mapper.Map<IEnumerable<RecipeListDTO>>(recipes);
+                return Ok(listDtos);
+            }
+            
             var dtos = _mapper.Map<IEnumerable<RecipeDTO>>(recipes);
             return Ok(dtos);
         }
