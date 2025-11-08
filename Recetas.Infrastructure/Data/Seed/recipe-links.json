@@ -4,7 +4,7 @@
     "Ingredients": [
       { "Name": "Berenjena", "Quantity": 2, "UnitCode": 1 },
       { "Name": "Aceite de oliva", "Quantity": 70, "UnitCode": 3 },
-      { "Name": "Ajo", "Quantity": 3, "UnitCode": 1 },
+      { "Name": "Ajo", "Quantity": 3, "UnitCode": 6 },
       { "Name": "Limón", "Quantity": 1, "UnitCode": 1 },
       { "Name": "Sal", "Quantity": 0, "UnitCode": 0 },
       { "Name": "Comino", "Quantity": 0, "UnitCode": 0 },
@@ -16,7 +16,53 @@
       "Dipeo",
       "Libanesa",
       "Vegetariana",
-      "Vegana"
+      "Vegana",
+      "Youtube"
+    ]
+  },
+  {
+    "RecipeName": "Tzatziki",
+    "Ingredients": [
+      { "Name": "Pepino", "Quantity": 1, "UnitCode": 1 },
+      { "Name": "Yogurt griego", "Quantity": 450, "UnitCode": 2 },
+      { "Name": "Ajo", "Quantity": 2, "UnitCode": 6 },
+      { "Name": "Limón", "Quantity": 0.5, "UnitCode": 1 },
+      { "Name": "Sal", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Pimienta negra", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Menta", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Eneldo", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Cayena en polvo", "Quantity": 0, "UnitCode": 0 }
+    ],
+    "TagNames": [
+      "Dipeo",
+      "Griega",
+      "Vegetariana",
+      "Youtube"
+    ]
+  },
+  {
+    "RecipeName": "Muhammara",
+    "Ingredients": [
+      { "Name": "Pimiento rojo", "Quantity": 2, "UnitCode": 1 },
+      { "Name": "Nueces", "Quantity": 140, "UnitCode": 2 },
+      { "Name": "Pan rallado", "Quantity": 40, "UnitCode": 2 },
+      { "Name": "Ajo", "Quantity": 1, "UnitCode": 6 },
+      { "Name": "Limón", "Quantity": 0.5, "UnitCode": 1 },
+      { "Name": "Sal", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Pimienta negra", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Zumo de granada", "Quantity": 200, "UnitCode": 3 },
+      { "Name": "Azúcar", "Quantity": 50, "UnitCode": 3 },
+      { "Name": "Cayena en polvo", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Pimentón dulce", "Quantity": 0, "UnitCode": 0 },
+      { "Name": "Comino", "Quantity": 0.5, "UnitCode": 5 },
+      { "Name": "Aceite de oliva", "Quantity": 3, "UnitCode": 4 }
+    ],
+    "TagNames": [
+      "Dipeo",
+      "Siria",
+      "Vegetariana",
+      "Vegana",
+      "Youtube"
     ]
   }
 ]

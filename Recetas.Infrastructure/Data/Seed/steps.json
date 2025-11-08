@@ -1,13 +1,13 @@
 [
   {
-    "Id": "00000001-0000-0000-0000-000000000000",
+    "Id": "00000001-a000-0000-0000-000000000000",
     "Name": "Batir huevos",
     "Description": "Batir los huevos en un bol.",
     "Order": 1,
     "RecipeId": "00000001-0000-0000-0000-000000000000"
   },
   {
-    "Id": "00000002-0000-0000-0000-000000000000",
+    "Id": "00000002-a000-0000-0000-000000000000",
     "Name": "Freír patatas",
     "Description": "Freír patatas en aceite de oliva.",
     "Order": 2,

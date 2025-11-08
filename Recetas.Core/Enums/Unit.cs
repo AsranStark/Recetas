@@ -11,6 +11,10 @@ namespace Recetas.Core.Enums
         Gramos = 2,
         Mililitros = 3,
         Cucharada = 4,
-        Cucharadita = 5
+        Cucharadita = 5,
+        Diente = 6,
+        Cabeza = 7,
+        Lomo = 8,
+        Pechuga = 9
     }
 }

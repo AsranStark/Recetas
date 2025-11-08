@@ -4,5 +4,17 @@
     "ImageUrl": "https://static01.nyt.com/images/2024/02/13/multimedia/MRS-Baba-Ganoush-zkpq/MRS-Baba-Ganoush-zkpq-threeByTwoLargeAt2X.jpg",
     "Order": 1,
     "RecipeId": "00000001-0000-0000-0000-000000000000"
+  },
+  {
+    "Id": "00000002-0000-0000-0000-000000000000",
+    "ImageUrl": "https://www.allrecipes.com/thmb/GzFa52gPQHS1woL27g8CXBKItak=/0x512/filters:no_upscale():max_bytes(150000):strip_icc()/145409_GreekTzatziki_ddmfs_3x4_3903-1475fff213ec4190bb847213c7b5011a.jpg",
+    "Order": 1,
+    "RecipeId": "00000002-0000-0000-0000-000000000000"
+  },
+  {
+    "Id": "00000003-0000-0000-0000-000000000000",
+    "ImageUrl": "https://cdn5.recetasdeescandalo.com/wp-content/uploads/2022/08/Muhammara-una-crema-de-pimientos-y-nueces-ideal-para-el-aperitivo.jpg.webp",
+    "Order": 1,
+    "RecipeId": "00000003-0000-0000-0000-000000000000"
   }
 ]

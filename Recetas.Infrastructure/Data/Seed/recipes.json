@@ -8,5 +8,25 @@
     "Rating": 5,
     "PreparationTime": 120,
     "PreparationInAdvance": false
+  },
+  {
+    "Id": "00000002-0000-0000-0000-000000000000",
+    "Name": "Tzatziki",
+    "Description": "Dipeo a base de yogur, pepino y ajo.",
+    "VideoUrl": "https://youtu.be/biLjY9RmC04?si=gxjUJTQV5vRP3rNV&t=216",
+    "Difficulty": 1,
+    "Rating": 4,
+    "PreparationTime": 30,
+    "PreparationInAdvance": false
+  },
+  {
+    "Id": "00000003-0000-0000-0000-000000000000",
+    "Name": "Muhammara",
+    "Description": "Dipeo a base de pimientos asados y nueces.",
+    "VideoUrl": "https://youtu.be/biLjY9RmC04?si=SGeMgotAXwmxU03L&t=370",
+    "Difficulty": 2,
+    "Rating": 5,
+    "PreparationTime": 80,
+    "PreparationInAdvance": false
   }
 ]
